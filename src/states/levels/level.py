@@ -154,6 +154,7 @@ class Level(State):
 
         # A list of all current minigames
         self.minigames = [cls.__name__ for cls in Minigame.__subclasses__()]
+        # self.minigames = ["Wordle"]
 
         self.controls = self.get_text_surface(
             "Press 'Escape' to pause", "white", font_size=36
