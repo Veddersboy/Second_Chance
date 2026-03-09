@@ -18,7 +18,7 @@ from src.states.minigames.reflexes import Reflexes
 from src.states.state import State, TimedState
 from src.utils.leaderboard import LeaderboardManager
 from src.utils.timer import Timer
-from src.utils.tualert import get_latest_alert
+from src.utils.tualert import TuAlert
 from ..levels.level1_1 import Level1_1
 
 # Global variable for volume
@@ -92,7 +92,7 @@ class StartMenu(State):
 
         # Create a banner for the latest TU alert
         self.menu.add.label("Latest TU Alert:", max_char=-1, font_size=14)
-        self.menu.add.label(get_latest_alert(), max_char=-1, font_size=20)
+        self.menu.add.label(TuAlert.get_latest_alert(), max_char=-1, font_size=20)
         self.menu.add.label("", max_char=-1, font_size=10)
 
             # Add buttons to the menu
