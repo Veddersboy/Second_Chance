@@ -18,6 +18,7 @@ from src.states.minigames.reflexes import Reflexes
 from src.states.state import State, TimedState
 from src.utils.leaderboard import LeaderboardManager
 from src.utils.timer import Timer
+from src.utils.tualert import TuAlert
 from ..levels.level1_1 import Level1_1
 from src.states.minigames.wordle import Wordle
 
@@ -89,6 +90,11 @@ class StartMenu(State):
 
         else:
             self.menu = pygame_menu.Menu('Options', SCREEN_WIDTH, SCREEN_HEIGHT, theme=pygame_menu.themes.THEME_DARK)
+
+        # Create a banner for the latest TU alert
+        self.menu.add.label("Latest TU Alert:", max_char=-1, font_size=14)
+        self.menu.add.label(TuAlert.get_latest_alert(), max_char=-1, font_size=20)
+        self.menu.add.label("", max_char=-1, font_size=10)
 
             # Add buttons to the menu
         self.menu.add.button('Start Game', self.manager.set_state, Level1_1)
