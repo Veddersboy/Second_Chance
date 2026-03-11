@@ -34,8 +34,11 @@ class Level(State):
             to None.
     """
 
-    def __init__(self, level: int, music_file: str, imgArr=None):
+    # key_item_grabbed = False
+
+    def __init__(self, level: int, music_file: str, key_in_level, imgArr=None):
         super().__init__()
+        self.key_item_grabbed = not key_in_level
         self.level = level
         self.scroll = 0
         self.level_scroll = 0
@@ -74,13 +77,21 @@ class Level(State):
             for enemy in enemies:
                 enemy.decrease_health(attack.damage_value)
 
+        # A collision with the key item sets the key flag to true and deletes that item
+        for key in self.keys:
+            if key.rect.colliderect(self.player.rect):
+                self.key_item_grabbed = True
+                key.kill()
+
         for portal in self.portals:
             if portal.rect.colliderect(self.player.rect):
-                if len(self.enemies) == 0:  # If no enemies left
+                if len(self.enemies) == 0 and self.key_item_grabbed:  # If no enemies left
                     # Transition to the start menu state
 
                     timer = LeaderboardManager(self.game)
-                    timer.update_leaderboard(self.game.username, self.current_time)
+
+                    # Commented out, as unmaintained leaderboard database crashes the game
+                    # timer.update_leaderboard(self.game.username, self.current_time)
 
                     self.manager.set_state(winscreen.WinScreen)
                 else:
@@ -134,6 +145,7 @@ class Level(State):
 
         self.platforms = pg.sprite.Group()
         self.portals = pg.sprite.Group()
+        self.keys = pg.sprite.Group()
         self.tiles = pg.sprite.Group()
         self.objects = pg.sprite.Group()
         self.enemies = enemy.EnemyGroup()
@@ -142,6 +154,9 @@ class Level(State):
 
         self.world.process_data(self.world_data)  # call method to process csv data
         self.add_portal()
+        # Only add key if level has one
+        if (not self.key_item_grabbed):
+            self.add_key()
 
     def init_attributes(self):
         """Initializes level attributes."""
@@ -216,9 +231,14 @@ class Level(State):
                 self.next_portal_time = self.last_portal_time + self.instruction_duration
             self.kill_instruction = pg.Surface((0, 0))
         else:
-            self.kill_instruction = self.get_text_surface(
-                "You must kill all enemies before you can enter the portal", "red", font_size=36
-            )
+            if self.key_item_grabbed:
+                self.kill_instruction = self.get_text_surface(
+                    "You must kill all enemies before you can enter the portal", "red", font_size=36
+                )
+            else:
+                self.kill_instruction = self.get_text_surface(
+                    "You must kill all enemies and grab the key before you can enter the portal", "red", font_size=36
+                )
 
     def draw_bg(self):
         """
