@@ -117,6 +117,10 @@ class Level(State):
         self.platforms.draw(self.screen)
         self.draw_health_bar()
         self.draw_text_surfaces()
+        # Red tint overlay for level atmosphere
+        tint = pg.Surface((self.screen.get_width(), self.screen.get_height()), flags=pg.SRCALPHA)
+        tint.fill((180, 0, 0, 90))
+        self.screen.blit(tint, (0, 0))
 
     def init_tiles(self):
         """Initializes level tiles."""
