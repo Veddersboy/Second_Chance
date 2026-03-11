@@ -89,7 +89,9 @@ class Level(State):
                     # Transition to the start menu state
 
                     timer = LeaderboardManager(self.game)
-                    timer.update_leaderboard(self.game.username, self.current_time)
+
+                    # Commented out, as unmaintained leaderboard database crashes the game
+                    # timer.update_leaderboard(self.game.username, self.current_time)
 
                     self.manager.set_state(winscreen.WinScreen)
                 else:
